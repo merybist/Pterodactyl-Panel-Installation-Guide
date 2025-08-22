@@ -179,4 +179,4 @@ If you encounter any problems or have questions, please open an **issue** on Git
 """
 
 README powered by **merybist**  
-Installer script borrowed from [github.com/eDenxGT](https://github.com/eDenxGT)
+Installer script borrowed from [github.com/pterodactyl-installer/pterodactyl-installer](https://github.com/pterodactyl-installer/pterodactyl-installer)
