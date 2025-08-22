@@ -174,5 +174,9 @@ php artisan p:user:make    # Create a new user
 ## 🎉 Congratulations!
 You have successfully installed **Pterodactyl Panel** and **Wings** on Ubuntu 24.04 LTS.
 
+## ❗ Need Help?
+If you encounter any problems or have questions, please open an **issue** on GitHub.
+"""
+
 README powered by **merybist**  
 Installer script borrowed from [github.com/eDenxGT](https://github.com/eDenxGT)
