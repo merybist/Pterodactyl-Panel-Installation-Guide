@@ -159,6 +159,115 @@ Then rerun the installer.
 
 ---
 
+## 🎭 If the node does not come up
+
+### Possible reasons for this
+- You didn't raise the issue yourself
+- You received the error `“Range overlap / Pool overlaps”`
+- The list may be supplemented...
+
+### Raise the node yourself:
+
+Run command:
+```bash
+wings --debug
+```
+💚 Noda got up.
+
+---
+
+⚠️ If you see:
+```error
+failed to configure docker environment error=Error response from daemon:
+invalid pool request: Pool overlaps with other one on this address space
+```
+Go to - `Fix "Pool overlaps"`
+
+---
+
+### Fix "Pool overlaps":
+
+The problem is that your **“Subnets”** overlap.
+And what **Wings** is trying to use is already being used by something else.
+
+Run command:
+```bash
+nano /etc/pterodactyl/config.yml
+```
+
+Find:
+
+```yaml
+docker:
+  network:
+    interface: 172.18.0.1
+    dns:
+    - 1.1.1.1
+    - 1.0.0.1
+    name: pterodactyl_nw
+    ispn: false
+    driver: bridge
+    network_mode: pterodactyl_nw
+    is_internal: false
+    enable_icc: true
+    network_mtu: 1500
+    interfaces:
+      v4:
+        subnet: 172.18.0.0/16
+        gateway: 172.18.0.1
+      v6:
+        subnet: fdba:17c8:6c94::/64
+        gateway: fdba:17c8:6c94::1011
+```
+You should be aware of your **busy** and **free** subnets.
+After that, establish the **free** ones.
+
+Example:
+```yaml
+    interfaces:
+      v4:
+        subnet: 172.18.0.0/16
+        gateway: 172.18.0.1
+```
+We know that the network `“172.18.0.0/16”` is busy.
+Let's replace it with a free subnet. For example - `"172.19.0.0/24"`
+
+Now it will look like this:
+```yaml
+    interfaces:
+      v4:
+        subnet: 172.19.0.0/24
+        gateway: 172.19.0.1
+```
+
+Now let us verify the **permissions**
+
+Run commands:
+```bash
+sudo chown root:root /etc/pterodactyl/config.yml
+sudo chmod 640 /etc/pterodactyl/config.yml
+```
+Delete the old conflicting network (if it was created):
+```bash
+docker network rm pterodactyl_nw
+```
+Reload the systemd configuration
+```bash
+sudo  systemctl daemon-reload
+```
+Restart Wings:
+```bash
+sudo systemctl restart wings
+```
+Make sure that the service is alive and does not crash immediately:
+```bash
+sudo  systemctl status wings --no-pager
+```
+
+### 💚 Congratulations! You have fixed the problem.
+
+---
+
 ## Useful commands
 
 Run from inside `/var/www/pterodactyl` directory:
